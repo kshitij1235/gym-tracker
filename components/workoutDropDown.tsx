@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
-import { Text, View, Image, TouchableOpacity, Alert } from 'react-native';
+import { Text, View, Image, TouchableOpacity } from 'react-native';
 import AppButton from './app_button';
+import CheckBox from 'react-native-check-box';
 
-const WorkoutDropDown = ({ exerciseTitle }) => {
+
+type Params = {
+  exerciseTitle: string;  
+};
+
+const WorkoutDropDown = ({ exerciseTitle }: Params) => {  
   const [isExpanded, setIsExpanded] = useState(false);
+  
+  // Initialize sets with isChecked property and some weights
   const [sets, setSets] = useState([
-    { id: 1, reps: 10 },
-    { id: 2, reps: 8 },
-    { id: 3, reps: 6 },
+    { id: 1, reps: 0, weight: 10, isChecked: false }, 
   ]);
 
   const toggleDropdown = () => {
@@ -15,8 +21,19 @@ const WorkoutDropDown = ({ exerciseTitle }) => {
   };
 
   const addSet = () => {
-    const newSet = { id: sets.length + 1, reps: 0 }; // Default reps as 0 for the new set
+    const newSet = { 
+      id: sets.length + 1, 
+      reps: 0, 
+      weight: 10, // Add weight value for new set
+      isChecked: false // Initial checkbox state
+    }; 
     setSets([...sets, newSet]);
+  };
+
+  const handleCheckboxToggle = (setId: number) => {
+    setSets(sets.map(set => 
+      set.id === setId ? { ...set, isChecked: !set.isChecked } : set
+    ));
   };
 
   return (
@@ -36,7 +53,7 @@ const WorkoutDropDown = ({ exerciseTitle }) => {
             
             {/* Exercise Title */}
             <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold' }}>
-              {exerciseTitle}
+              {exerciseTitle}  {/* Corrected to use exerciseTitle */}
             </Text>
           </View>
 
@@ -49,32 +66,54 @@ const WorkoutDropDown = ({ exerciseTitle }) => {
 
       {/* Expanded content */}
       {isExpanded && (
+
+
         <View style={{ padding: 10, backgroundColor: "#404040", borderRadius: 10, marginTop: 5 }}>
+          <Text className='text-2xl text-white p-2'>Sets </Text>
+
+
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
+              <Text style={{ color: 'white', marginRight: 10, fontSize: 16 }}>
+                status
+              </Text>
+              <Text style={{ color: 'white', marginRight: 10, fontSize: 16 }}>
+                set
+              </Text>
+
+              <Text style={{ color: 'white', fontSize: 16 }}>
+                weight kg/lbs
+              </Text>
+            </View>
+
+
           {sets.map((set) => (
-            <Text 
-              key={set.id} 
-              style={{ color: 'white', marginBottom: 5, fontSize: 16 }}
-            >
-              Set {set.id}: {set.reps} reps
-            </Text>
+            <View key={set.id} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
+              {/* Checkbox on the left */}
+              <CheckBox
+                value={set.isChecked}
+                onValueChange={() => handleCheckboxToggle(set.id)} 
+                style={{ color: 'white', marginRight: 10 }}
+              />
+              
+              {/* Set number in the middle */}
+              <Text style={{ color: 'white', marginRight: 10, fontSize: 16 }}>
+                {set.id}
+              </Text>
+              
+              {/* Weight on the right */}
+              <Text style={{ color: 'white', fontSize: 16 }}>
+                {set.weight} kg
+              </Text>
+            </View>
           ))}
+
           <AppButton 
             title="Add Set" 
             onPress={addSet} 
-            style={{
-              backgroundColor: '#007BFF',
-              paddingVertical: 10,
-              borderRadius: 8,
-              marginTop: 10,
-              alignItems: 'center',
-            }}
-            textStyle={{
-              color: 'white',
-              fontSize: 16,
-              fontWeight: 'bold',
-            }}
           />
         </View>
+
+
       )}
     </View>
   );
