@@ -1,19 +1,16 @@
 import React, { useState } from 'react';
-import { Text, View, Image, TouchableOpacity } from 'react-native';
-import AppButton from './app_button';
+import { Text, View, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import CheckBox from 'react-native-check-box';
-
+import AppButton from './app_button'; // Assuming you have an AppButton component
 
 type Params = {
-  exerciseTitle: string;  
+  exerciseTitle: string;
 };
 
-const WorkoutDropDown = ({ exerciseTitle }: Params) => {  
+const WorkoutDropDown = ({ exerciseTitle }: Params) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  
-  // Initialize sets with isChecked property and some weights
   const [sets, setSets] = useState([
-    { id: 1, reps: 0, weight: 10, isChecked: false }, 
+    { id: 1, reps: 0, weight: 10, isChecked: false },
   ]);
 
   const toggleDropdown = () => {
@@ -21,102 +18,166 @@ const WorkoutDropDown = ({ exerciseTitle }: Params) => {
   };
 
   const addSet = () => {
-    const newSet = { 
-      id: sets.length + 1, 
-      reps: 0, 
-      weight: 10, // Add weight value for new set
-      isChecked: false // Initial checkbox state
-    }; 
+    const newSet = {
+      id: sets.length + 1,
+      reps: 0,
+      weight: 10,
+      isChecked: false,
+    };
     setSets([...sets, newSet]);
   };
 
   const handleCheckboxToggle = (setId: number) => {
-    setSets(sets.map(set => 
-      set.id === setId ? { ...set, isChecked: !set.isChecked } : set
-    ));
+    setSets(
+      sets.map((set) =>
+        set.id === setId ? { ...set, isChecked: !set.isChecked } : set
+      )
+    );
   };
 
   return (
-    <View style={{ paddingBottom: 10, paddingRight: 10, paddingLeft: 10 }}>
+    <View style={styles.container}>
       {/* Dropdown Header */}
-      <TouchableOpacity 
-        style={{ backgroundColor: "#303030", borderRadius: 12 }}
-        onPress={toggleDropdown}
-      >
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 12 }}>
+      <TouchableOpacity style={styles.header} onPress={toggleDropdown}>
+        <View style={styles.headerContent}>
           {/* Image on the left */}
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={styles.headerLeft}>
             <Image
-              source={{ uri: 'https://via.placeholder.com/56' }} // Replace with your image URL
-              style={{ width: 56, height: 56, borderRadius: 8, marginRight: 10 }}
+              source={{ uri: 'https://i.pinimg.com/736x/6d/91/0c/6d910c7fc963ad298b0d8c437b56e155.jpg' }} // Replace with your image URL
+              style={styles.image}
             />
-            
-            {/* Exercise Title */}
-            <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold' }}>
-              {exerciseTitle}  {/* Corrected to use exerciseTitle */}
-            </Text>
+            <Text style={styles.title}>{exerciseTitle}</Text>
           </View>
-
           {/* Arrow Indicator */}
-          <Text style={{ color: 'white', fontSize: 18 }}>
-            {isExpanded ? '▲' : '▼'}
-          </Text>
+          <Text style={styles.arrow}>{isExpanded ? '▲' : '▼'}</Text>
         </View>
       </TouchableOpacity>
 
       {/* Expanded content */}
       {isExpanded && (
+        <View style={styles.dropdown}>
+          {/* Table Header */}
+          <View style={styles.tableHeader}>
+            <Text style={styles.tableHeaderText}>Status</Text>
+            <Text style={[styles.tableHeaderText, { textAlign: 'center' }]}>
+              Set
+            </Text>
+            <Text style={[styles.tableHeaderText, { textAlign: 'right' }]}>
+              Weight (kg/lbs)
+            </Text>
+          </View>
 
-
-        <View style={{ padding: 10, backgroundColor: "#404040", borderRadius: 10, marginTop: 5 }}>
-          <Text className='text-2xl text-white p-2'>Sets </Text>
-
-
-              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
-              <Text style={{ color: 'white', marginRight: 10, fontSize: 16 }}>
-                status
-              </Text>
-              <Text style={{ color: 'white', marginRight: 10, fontSize: 16 }}>
-                set
-              </Text>
-
-              <Text style={{ color: 'white', fontSize: 16 }}>
-                weight kg/lbs
-              </Text>
-            </View>
-
-
+          {/* Table Rows */}
           {sets.map((set) => (
-            <View key={set.id} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
-              {/* Checkbox on the left */}
+            <View key={set.id} style={styles.tableRow}>
               <CheckBox
-                value={set.isChecked}
-                onValueChange={() => handleCheckboxToggle(set.id)} 
-                style={{ color: 'white', marginRight: 10 }}
+                isChecked={set.isChecked}
+                onClick={() => handleCheckboxToggle(set.id)}
+                checkBoxColor="#007AFF"
+                style={styles.checkbox}
               />
-              
-              {/* Set number in the middle */}
-              <Text style={{ color: 'white', marginRight: 10, fontSize: 16 }}>
-                {set.id}
-              </Text>
-              
-              {/* Weight on the right */}
-              <Text style={{ color: 'white', fontSize: 16 }}>
+              <Text style={styles.tableRowText}>{set.id}</Text>
+              <Text style={[styles.tableRowText, { textAlign: 'right' }]}>
                 {set.weight} kg
               </Text>
             </View>
           ))}
 
-          <AppButton 
-            title="Add Set" 
-            onPress={addSet} 
-          />
+          <AppButton title="Add Set" onPress={addSet} />
         </View>
-
-
       )}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    paddingRight : 10,
+    paddingLeft:10,
+    paddingBottom : 4,
+    borderRadius:16,
+    backgroundColor: '#121212', // Dark theme background
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    marginBottom: 16,
+  },
+  header: {
+    backgroundColor: '#1F1F1F', // Darker background for header
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  headerContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 12,
+  },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  image: {
+    width: 56,
+    height: 56,
+    borderRadius: 12,
+    marginRight: 12,
+  },
+  title: {
+    color: '#E0E0E0', // Lighter text for readability
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  arrow: {
+    color: '#007AFF', // iOS blue color
+    fontSize: 18,
+  },
+  dropdown: {
+    padding: 10,
+    borderRadius:16,
+    backgroundColor: '#1F1F1F', // Darker background
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  tableHeader: {
+    paddingTop:10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#333333', // Slightly lighter dark background
+    padding: 10,
+    borderRadius: 8,
+  },
+  tableHeaderText: {
+    fontSize: 14,
+    color: '#B0B0B0', // Light text for dark background
+    fontWeight: '600',
+    flex: 1,
+  },
+  tableRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#444444', // Darker border for rows
+  },
+  tableRowText: {
+    fontSize: 16,
+    color: '#E0E0E0', 
+    textAlign: 'center',
+    paddingLeft:110,
+    flex: 1,
+  },
+  checkbox: {
+    marginRight: 10,         
+    alignItems: 'center',    
+  },
+});
 
 export default WorkoutDropDown;

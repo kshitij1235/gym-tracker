@@ -1,4 +1,4 @@
-import { View, Text, TextInput , Image} from 'react-native'
+import { View, Text, TextInput , Image , ScrollView } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import WorkoutDropDown from '@/components/workoutDropDown'
@@ -19,9 +19,14 @@ const log_workout = () => {
         />
       </View>
 
+
+      <ScrollView>
+
       <WorkoutDropDown exerciseTitle="Bench Press" />
       <WorkoutDropDown exerciseTitle="Deadlift" />
       <WorkoutDropDown exerciseTitle="Squats" />
+
+      </ScrollView>
 
 
 
