@@ -1,94 +1,128 @@
 import React, { useState } from 'react';
 import { Text, View, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import CheckBox from 'react-native-check-box';
-import AppButton from './app_button'; // Assuming you have an AppButton component
+import AppButton from './app_button';
 
 type Params = {
-  exerciseTitle: string;
-};
+  exerciseTitle: string
+}
 
 const WorkoutDropDown = ({ exerciseTitle }: Params) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false)
   const [sets, setSets] = useState([
-    { id: 1, reps: 0, weight: 10, isChecked: false },
-  ]);
+    { id: 1, reps: 0, weight: 10, tags: 'Strength', isChecked: false },
+  ])
 
   const toggleDropdown = () => {
-    setIsExpanded(!isExpanded);
-  };
+    setIsExpanded(!isExpanded)
+  }
 
   const addSet = () => {
     const newSet = {
       id: sets.length + 1,
       reps: 0,
       weight: 10,
+      tags: '--',
       isChecked: false,
-    };
-    setSets([...sets, newSet]);
-  };
+    }
+    setSets([...sets, newSet])
+  }
 
   const handleCheckboxToggle = (setId: number) => {
     setSets(
       sets.map((set) =>
         set.id === setId ? { ...set, isChecked: !set.isChecked } : set
       )
-    );
-  };
+    )
+  }
 
   return (
     <View style={styles.container}>
-      {/* Dropdown Header */}
-      <TouchableOpacity style={styles.header} onPress={toggleDropdown}>
-        <View style={styles.headerContent}>
-          {/* Image on the left */}
-          <View style={styles.headerLeft}>
-            <Image
-              source={{ uri: 'https://i.pinimg.com/736x/6d/91/0c/6d910c7fc963ad298b0d8c437b56e155.jpg' }} // Replace with your image URL
-              style={styles.image}
-            />
-            <Text style={styles.title}>{exerciseTitle}</Text>
-          </View>
-          {/* Arrow Indicator */}
-          <Text style={styles.arrow}>{isExpanded ? '▲' : '▼'}</Text>
+    {/* Dropdown Header */}
+    <TouchableOpacity style={styles.header} onPress={toggleDropdown}>
+      <View style={styles.headerContent}>
+        {/* Image on the left */}
+        <View style={styles.headerLeft}>
+          <Image
+            source={{ uri: 'https://i.pinimg.com/736x/6d/91/0c/6d910c7fc963ad298b0d8c437b56e155.jpg' }} // Replace with your image URL
+            style={styles.image}
+          />
+          <Text style={styles.title}>{exerciseTitle}</Text>
         </View>
-      </TouchableOpacity>
+        {/* Arrow Indicator */}
+        <Text style={styles.arrow}>{isExpanded ? '▲' : '▼'}</Text>
+      </View>
+    </TouchableOpacity>
 
-      {/* Expanded content */}
+      {/* Expanded Content */}
       {isExpanded && (
-        <View style={styles.dropdown}>
+        <View className="px-4 py-2">
           {/* Table Header */}
-          <View style={styles.tableHeader}>
-            <Text style={styles.tableHeaderText}>Status</Text>
-            <Text style={[styles.tableHeaderText, { textAlign: 'center' }]}>
-              Set
+          <View className="flex-row items-center justify-between border-b border-[#1a1a1a] py-3">
+            <Text className="flex-1 text-center text-xs uppercase text-gray-500">
+              set
             </Text>
-            <Text style={[styles.tableHeaderText, { textAlign: 'right' }]}>
-              Weight (kg/lbs)
+            <Text className="flex-1 text-center text-xs uppercase text-gray-500">
+              previous
+            </Text>
+            <Text className="flex-1 text-center text-xs uppercase text-gray-500">
+              weight
+            </Text>
+            <Text className="flex-1 text-center text-xs uppercase text-gray-500">
+              reps
+            </Text>
+            <Text className="flex-1 text-center text-xs uppercase text-gray-500">
+              tag
+            </Text>
+            <Text className="flex-1 text-center text-xs uppercase text-gray-500">
+              Done
             </Text>
           </View>
 
           {/* Table Rows */}
           {sets.map((set) => (
-            <View key={set.id} style={styles.tableRow}>
-              <CheckBox
-                isChecked={set.isChecked}
-                onClick={() => handleCheckboxToggle(set.id)}
-                checkBoxColor="#007AFF"
-                style={styles.checkbox}
-              />
-              <Text style={styles.tableRowText}>{set.id}</Text>
-              <Text style={[styles.tableRowText, { textAlign: 'right' }]}>
-                {set.weight} kg
+            <View
+              key={set.id}
+              className="flex-row items-center justify-between border-b border-[#1a1a1a] py-3"
+            >
+              <Text className="flex-1 text-center text-sm text-gray-300">
+                {set.id}
               </Text>
+              <Text className="flex-1 text-center text-sm text-gray-500">--</Text>
+              <Text className="flex-1 text-center text-sm text-gray-300">
+                {set.weight}
+              </Text>
+              <Text className="flex-1 text-center text-sm text-gray-300">
+                {set.reps}
+              </Text>
+              <Text className="flex-1 text-center text-sm text-gray-300">
+                {set.tags}
+              </Text>
+              <View className="flex-1 items-center">
+                <CheckBox
+                  isChecked={set.isChecked}
+                  onClick={() => handleCheckboxToggle(set.id)}
+                  checkBoxColor="#3B82F6" // Blue-500 color
+                  style={{ width: 20, height: 20 , marginLeft:20}}
+                />
+              </View>
             </View>
           ))}
 
-          <AppButton title="Add Set" onPress={addSet} />
+          {/* Add Set Button */}
+          <View className="mt-3">
+            <AppButton 
+              title="Add Set" 
+              onPress={addSet}
+              className="bg-[#1a1a1a] py-3 rounded-lg"
+              textClassName="text-center text-sm font-medium text-gray-400"
+            />
+          </View>
         </View>
       )}
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {

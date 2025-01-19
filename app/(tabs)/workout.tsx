@@ -2,6 +2,7 @@ import { Text, View ,Alert } from 'react-native'
 import React, { PureComponent } from 'react'
 import AppButton from '@/components/app_button'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import RoutineCard from '@/components/RoutineCard'
 export default class workout extends PureComponent {
   render() {
     return (
@@ -35,6 +36,13 @@ export default class workout extends PureComponent {
                 textClassName="text-white text-center text-lg font-bold"
                 />          
             </View>
+      
+      <Text className='text-3xl text-white font-bold p-4'>Saved Routine</Text>
+      
+      <View className='m-4'  style={{backgroundColor : "#303030",  borderRadius:10}}>
+        <RoutineCard/>
+      </View>
+
     </SafeAreaView>
     )
   }
